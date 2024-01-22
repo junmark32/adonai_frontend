@@ -376,6 +376,16 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-lg-6 col-12">
+                                        <select v-model="selectedLocation" class="form-control" required>
+                                          <option value="" disabled selected>Select Location</option>
+                                          <option value="Sitio 2, Pinagsabangan, Curva, Naujan, Oriental Mindoro">Sitio 2, Pinagsabangan, Curva, Naujan, Oriental Mindoro</option>
+                                          <option value="Poblacion, Mansalay, Oriental Mindoro">Poblacion, Mansalay, Oriental Mindoro</option>
+                                          <option value="Xentro Mall, Lumang Bayan, Calapan City, Oriental Mindoro">Xentro Mall, Lumang Bayan, Calapan City, Oriental Mindoro</option>
+                                          <!-- Add more options as needed -->
+                                        </select>
+                                    </div>
+
 
                                     <div class="col-12">
                                         <textarea class="form-control" rows="5" id="message" v-model="message" placeholder="Additional Message"></textarea>
@@ -459,6 +469,7 @@ export default {
     return {
         selectedPurpose: '',
         selectedDoctor: '',
+        selectedLocation: '',
         name: '',
         email: '',
         phone: '',
@@ -484,6 +495,7 @@ export default {
             pref_date: this.date,
             pref_doctor: this.selectedDoctor,
             purpose: this.selectedPurpose,
+            pref_location: this.selectedLocation,
             add_message: this.message,
           });
   

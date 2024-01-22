@@ -69,32 +69,33 @@
 
     <!-- Main Content Area -->
     <v-main>
-      <v-container>
+      <v-container fluid>
         <!-- Dashboard Content -->
         <v-row v-if="currentView === 'dashboard'">
           <v-col>
-            <v-card>
+            <v-card v-if="doctorData" >
               <v-card-title class="headline">Doctor Information</v-card-title>
-              <v-card-subtitle>{{ doctor.firstName }} {{ doctor.lastName }}</v-card-subtitle>
+              <v-card-subtitle>{{ doctorData.FirstName }} {{ doctorData.LastName }}</v-card-subtitle>
+              <v-card-subtitle>ID: {{ doctorData.DoctorID }} </v-card-subtitle>
               <v-divider></v-divider>
               <v-card-text>
                 <v-list>
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Email:</v-list-item-title>
-                      <v-list-item-subtitle>{{ doctor.email }}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ doctorData.Email }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Phone:</v-list-item-title>
-                      <v-list-item-subtitle>{{ doctor.phone }}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ doctorData.Phone }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Specialization:</v-list-item-title>
-                      <v-list-item-subtitle>{{ doctor.specialization }}</v-list-item-subtitle>
+                      <v-list-item-subtitle>{{ doctorData.Specialization }}</v-list-item-subtitle>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -104,55 +105,62 @@
         </v-row>
 
         <!-- Appointments Content -->
-  <v-row v-if="currentView === 'appointments'">
-    <v-col>
-      <v-card>
-        <v-card-title class="headline">Upcoming Appointments</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text>
-          <!-- Filter options -->
-          <v-row class="mb-2">
-            <v-col>
-              <v-select v-model="perPage" :items="[5, 10, 20]" label="Items per page"></v-select>
-            </v-col>
-            <v-col>
-              <v-select v-model="statusFilter" :items="['All', 'Approved', 'Pending']" label="Status"></v-select>
-            </v-col>
-            <v-col>
-              <v-text-field v-model="search" label="Search"></v-text-field>
-            </v-col>
-          </v-row>
-
-          <!-- Table -->
-          <div class="table-container">
-            <table class="elevation-1 appointment-table">
-              <thead>
-                <tr>
-                  <th v-for="header in appointmentsTableHeaders" :key="header.value">
-                    {{ header.text }}
-                  </th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in filteredAppointments" :key="item.AppointmentID">
-                  <td v-for="header in appointmentsTableHeaders" :key="header.value">
-                    {{ item[header.value] }}
-                  </td>
-                  <td>
-                    <v-btn @click="openModal(item)" class="action-button">View</v-btn>
-                    <v-btn v-if="item.status === 'Scheduled'" @click="approveAppointment(item)" class="action-button">
-                      Approve
-                    </v-btn>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </v-card-text>
-      </v-card>
-    </v-col>
-  </v-row>
+        <v-row v-if="currentView === 'appointments'">
+          <v-col>
+            <v-card>
+              <v-card-title class="headline">Upcoming Appointments</v-card-title>
+              <v-divider></v-divider>
+              <v-card-text>
+                <!-- Filter options -->
+                <v-row class="mb-2">
+                  <v-col>
+                    <v-select v-model="perPage" :items="[5, 10, 20]" label="Items per page"></v-select>
+                  </v-col>
+                  <v-col>
+                    <v-select v-model="statusFilter" :items="['All', 'Approved', 'Pending']" label="Status"></v-select>
+                  </v-col>
+                  <v-col>
+                    <v-text-field v-model="search" label="Search"></v-text-field>
+                  </v-col>
+                </v-row>
+      
+                <!-- Table -->
+                <div class="table-container appointment-table-container">
+                  <table class="elevation-1 appointment-table">
+                    <thead>
+                      <tr>
+                        <th v-for="header in appointmentsTableHeaders" :key="header.value">
+                          {{ header.text }}
+                        </th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in paginatedAppointments" :key="item.AppointmentID">
+                        <td v-for="header in appointmentsTableHeaders" :key="header.value">
+                          {{ item[header.value] }}
+                        </td>
+                        <td>
+                          <v-btn @click="openModal(item)" class="action-button">View</v-btn>
+                          <v-btn v-if="item.status === 'Scheduled'" @click="approveAppointment(item)" class="action-button">
+                            Approve
+                          </v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+      
+                <!-- Pagination controls -->
+                <v-row class="mt-3">
+                  <v-col>
+                    <v-pagination v-model="currentPage" :length="totalPages" @input="updatePage"></v-pagination>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
 
 
         <!-- Patients Content -->
@@ -293,19 +301,15 @@ export default {
       statusFilter: 'All',
       search: '',
 
+      currentPage: 1, // Track the current page
+      
+
       //
       drawer: true,
       mini: false,
       currentView: 'dashboard', // Default view
 
-      // Sample Doctor Data
-      doctor: {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '123-456-7890',
-        specialization: 'Ophthalmologist',
-      },
+     
 
       // Sample Appointments Data
       appointments: [
@@ -318,6 +322,7 @@ export default {
         { text: 'Phone', value: 'Phone' },
         { text: 'Date', value: 'Pref_Date' },
         { text: 'Doctor', value: 'Pref_Doctor' },
+        { text: 'Location', value: 'Pref_Location' },
         { text: 'Purpose', value: 'Purpose' },
         { text: 'Message', value: 'Add_message' },
         { text: 'Status', value: 'Status' },
@@ -325,17 +330,18 @@ export default {
 
       // Sample Patients Data
       patients: [
-        {
-          patientID: 1,
-          firstName: 'Alice',
-          lastName: 'Smith',
-          email: 'alice.smith@example.com',
-          phone: '987-654-3210',
-          gender: 'Female',
-          dateOfBirth: '1990-05-15',
-          address: '123 Main St, Cityville',
-        },
-        // Add more sample patients as needed
+      ],
+
+      // Table Headers for Patients
+      patientTableHeaders: [
+        { text: 'PatientID', value: 'PatientID' },
+        { text: 'First Name', value: 'FirstName' },
+        { text: 'Last Name', value: 'LastName' },
+        { text: 'Email', value: 'Email' },
+        { text: 'Phone', value: 'Phone' },
+        { text: 'Gender', value: 'Gender' },
+        { text: 'Date of Birth', value: 'DateOfBirth' },
+        { text: 'Address', value: 'Address' },
       ],
 
       // Sample Eyewear Data
@@ -349,18 +355,6 @@ export default {
           stockQuantity: 20,
         },
         // Add more sample eyewear as needed
-      ],
-
-      // Table Headers for Patients
-      patientTableHeaders: [
-        { text: 'ID', value: 'patientID' },
-        { text: 'First Name', value: 'firstName' },
-        { text: 'Last Name', value: 'lastName' },
-        { text: 'Email', value: 'email' },
-        { text: 'Phone', value: 'phone' },
-        { text: 'Gender', value: 'gender' },
-        { text: 'Date of Birth', value: 'dateOfBirth' },
-        { text: 'Address', value: 'address' },
       ],
 
       // Table Headers for Eyewear
@@ -383,6 +377,7 @@ export default {
 
       doctorUsername: null,
       doctorID: null,
+      doctorData: null,
     };
   },
 
@@ -393,7 +388,7 @@ export default {
 
       // Apply status filter
       if (this.statusFilter !== 'All') {
-        filtered = filtered.filter(item => item.status === this.statusFilter);
+        filtered = filtered.filter(item => item.Status === this.statusFilter);
       }
 
       // Apply search filter
@@ -406,6 +401,17 @@ export default {
 
       return filtered.slice(0, this.perPage);
     },
+
+    // Calculate the total number of pages based on the perPage and total items
+    totalPages() {
+      return Math.ceil(this.filteredAppointments.length / this.perPage);
+    },
+    // Paginate the filteredAppointments based on the currentPage and perPage
+    paginatedAppointments() {
+      const start = (this.currentPage - 1) * this.perPage;
+      const end = start + this.perPage;
+      return this.filteredAppointments.slice(start, end);
+    },
   },
 
   created (){
@@ -416,10 +422,18 @@ export default {
     //
     this.getAppointmentsbyDoctorUsername();
     this.approveAppointmentInModal();
+    this.getPatients();
+    this.getDoctorsData();
 
   },
 
   methods: {
+    // Method to update the current page when the user interacts with pagination controls
+    updatePage(page) {
+      this.currentPage = page;
+    },
+
+
     // Method to navigate to different views
     navigateTo(view) {
       this.currentView = view;
@@ -480,6 +494,30 @@ export default {
         console.log(response.data.message);
       } catch (error) {
         console.error('Error sending approval email:', error);
+      }
+    },
+
+    async getPatients() {
+      try {
+        const response = await axios.get(`getPatients`);
+        
+        this.patients = response.data;
+        
+        
+      } catch (error) {
+        console.error('Error fetching subjects by studentId:', error);
+      }
+    },
+
+    async getDoctorsData(){
+      try {
+        const response = await axios.post(`getDoctorsData/${this.doctorID}`);
+
+
+        this.doctorData = response.data[0];
+
+      } catch (error) {
+        console.error('Error fetching doctors data usinf doctorid:', error);
       }
     },
     
@@ -558,6 +596,11 @@ export default {
 </script>
 
 <style scoped>
+.appointment-table-container {
+  max-height: 400px; /* Set a fixed height for the table container */
+  overflow-y: auto;  /* Add vertical scrollbar */
+}
+
 .appointment-table {
   width: 100%;
   border-collapse: collapse;
@@ -581,4 +624,12 @@ export default {
 .table-container {
   overflow-x: auto;
 }
+
+
+</style>
+
+<style>
+  body {
+    padding-top: 0 !important; /* Set body's padding-top to 0 */
+  }
 </style>
