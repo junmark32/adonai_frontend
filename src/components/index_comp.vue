@@ -43,6 +43,12 @@
                             <a class="nav-link" href="#contact">Contact</a>
                         </li>
                     </ul>
+
+                </div>
+
+                <div class="navbar-icons">
+                    <a href="#" class="profile-icon"><i class="bi-person"></i></a>
+                    <a href="#" class="cart-icon"><i class="bi-cart"></i><span class="cart-count">{{ cart.length }}</span></a>
                 </div>
 
             </div>
@@ -132,58 +138,51 @@
             </div>
         </section>
 
-        <section class="section-padding pb-0" id="eyewear">
-            <div class="container">
-                <div class="row">
+        <section class="eyewear">
+        <v-app>
+            <v-container>
+
+            <h2 class="text-center mb-lg-5 mb-4">Eyewear Collection</h2>
         
-                    <h2 class="text-center mb-lg-5 mb-4">Eyewear Collection</h2>
+              <!-- Product Cards -->
+              <v-row>
+                <v-col v-for="product in products" :key="product.id" cols="12" sm="6" md="4">
+                  <v-card class="product-card">
+                    <v-img class="product-image" :src="product.image" height="250" contain></v-img>
+                    <v-card-title class="product-title">{{ product.name }}</v-card-title>
+                    <v-card-subtitle class="product-price">{{ formatPrice(product.price) }}</v-card-subtitle>
+                    <v-card-actions class="product-actions">
+                      <v-btn @click="addToCart(product)" class="add-to-cart-btn" :disabled="product.type === 'glasses' && !frameInCart">Add to Cart</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
+              </v-row>
         
-                    <div class="timeline">
-                        <!-- Timeline Entry 1 -->
-                        <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes">
-                            <div class="col-9 col-md-5 me-md-4 me-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class="text-light">Stylish Sunglasses</h3>
-                                <img :src="require('../../public/img/sunglass.png')" alt="Stylish Sunglasses">
-                                <p>Explore our latest collection of stylish sunglasses. Perfect for both casual and formal occasions.</p>
-                                <p>Model: Classic Sun</p>
-                                <p>Price: $99.99</p>
-                            </div>
-        
-                            <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-eye timeline-icon"></i>
-                            </div>
-        
-                            <div class="col-9 col-md-5 ps-md-3 ps-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2022-01-15 Saturday</time>
-                            </div>
-                        </div>
-        
-                        <!-- Timeline Entry 2 -->
-                        <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes my-lg-5 my-4">
-                            <div class="col-9 col-md-5 ms-md-4 ms-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class="text-light">Fashion Frames</h3>
-                                <img :src="require('../../public/img/sunglass.png')" alt="Fashion Frames">
-                                <p>Discover our trendy fashion frames designed to elevate your style. Available in various colors and shapes.</p>
-                                <p>Model: Vogue Vision</p>
-                                <p>Price: $129.99</p>
-                            </div>
-        
-                            <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-image timeline-icon"></i>
-                            </div>
-        
-                            <div class="col-9 col-md-5 pe-md-3 pe-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2022-02-05 Thursday</time>
-                            </div>
-                        </div>
-        
-                        <!-- Timeline Entry 3 -->
-                        <!-- Add more entries as needed -->
-        
-                    </div>
-        
-                </div>
-            </div>
+              <!-- Cart Modal -->
+              <v-dialog v-model="showCartModal" max-width="600">
+                <v-card>
+                  <v-card-title class="cart-title">Shopping Cart</v-card-title>
+                  <v-list>
+                    <v-list-item v-for="item in cart" :key="item.product.id">
+                      <v-list-item-content>
+                        <v-list-item-title>{{ item.product.name }}</v-list-item-title>
+                        <v-list-item-subtitle>{{ formatPrice(item.product.price) }}</v-list-item-subtitle>
+                      </v-list-item-content>
+                      <v-list-item-action>
+                        <v-btn @click="removeFromCart(item.product)" icon>
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                      </v-list-item-action>
+                    </v-list-item>
+                  </v-list>
+                  <v-card-actions>
+                    <span class="total-text">Total: {{ formatPrice(totalPrice) }}</span>
+                    <v-btn color="primary" @click="showCartModal = false">Close</v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </v-container>
+          </v-app>
         </section>
         
 
@@ -439,7 +438,28 @@ export default {
         //
         PatientID: null,
         
+        //
+        drawer: false,
+      products: [
+        { id: 1, name: 'Aviator Sunglasses', type: 'frames', price: 50, image: 'https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/447020/item/goods_09_447020.jpg?width=750' },
+        { id: 2, name: 'Wayfarer Sunglasses', type: 'frames', price: 80, image: 'https://image.uniqlo.com/UQ/ST3/AsianCommon/imagesgoods/463724/item/goods_09_463724.jpg?width=750' },
+        { id: 3, name: 'Round Sunglasses', type: 'frames', price: 120, image: 'https://via.placeholder.com/300x400' },
+        { id: 4, name: 'Polarized Lens', type: 'glasses', price: 30, image: 'https://via.placeholder.com/300x400' },
+        { id: 5, name: 'Transition Lens', type: 'glasses', price: 40, image: 'https://via.placeholder.com/300x400' },
+        { id: 6, name: 'Blue Light Filter Lens', type: 'glasses', price: 20, image: 'https://via.placeholder.com/300x400' },
+        { id: 7, name: 'Eyewear Case', type: 'accessories', price: 10, image: 'https://via.placeholder.com/300x400' },
+        { id: 8, name: 'Cleaning Cloth', type: 'accessories', price: 5, image: 'https://via.placeholder.com/300x400' },
+      ],
+      cart: [],
+      frameInCart: false,
+      showCartModal: false,
       };
+  },
+
+  computed: {
+    totalPrice() {
+      return this.cart.reduce((total, item) => total + item.product.price, 0);
+    }
   },
 
   created(){
@@ -468,7 +488,88 @@ export default {
           // Optionally, you can handle errors here, e.g., show an error message
         }
       },
+
+    
+    //ecom
+    addToCart(product) {
+        if (product.type === 'frames') {
+          this.cart.push({ product });
+          this.frameInCart = true;
+        } else {
+          if (!this.frameInCart) {
+            alert('Please add frames first.');
+            return;
+          }
+          this.cart.push({ product });
+        }
+      },
+      removeFromCart(product) {
+        const index = this.cart.findIndex(item => item.product.id === product.id);
+        if (index !== -1) {
+          if (this.cart[index].product.type === 'frames') {
+            this.frameInCart = false;
+          }
+          this.cart.splice(index, 1);
+        }
+      },
+      toggleCartModal() {
+        this.showCartModal = !this.showCartModal;
+      },
+      formatPrice(price) {
+        return '$' + price.toFixed(2);
+      }
+
   }
 };
 </script>
 
+<style>
+
+.navbar-icons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 200px;
+    bottom: 0;
+    right: 50px;
+}
+
+.navbar-icons a {
+    font-size: 24px;
+    color: #333;
+    margin: 10px 0;
+    background-color: white; /* Add white background */
+    width: 40px; /* Set width and height to create a circle */
+    height: 40px;
+    border-radius: 50%; /* Make it circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none; /* Remove underline */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+
+
+
+/* Adjust the size and color of icons as needed */
+
+.cart-count {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+
+</style>
