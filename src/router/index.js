@@ -6,7 +6,10 @@ import Login from '../views/LoginView.vue'
 
 //doctor
 import Doctor_Dashboard from '../views/doctor/DashboardView.vue'
+//admin
 import Admin_Dashboard from '../views/admin/DashboardView.vue'
+//user
+import User_Ecom from '../views/user/EcomView.vue'
 
 const routes = [
   {
@@ -41,6 +44,15 @@ const routes = [
     path: '/Admin/Dashboard',
     name: 'Admin_Dashboard',
     component: Admin_Dashboard
+  },
+
+  //user
+
+  
+  {
+    path: '/User/Ecommerce',
+    name: 'User_Ecom',
+    component: User_Ecom
   },
 
   {

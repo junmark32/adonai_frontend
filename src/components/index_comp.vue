@@ -135,96 +135,57 @@
         <section class="section-padding pb-0" id="eyewear">
             <div class="container">
                 <div class="row">
-
-                    <h2 class="text-center mb-lg-5 mb-4">Our Timeline</h2>
-                    
+        
+                    <h2 class="text-center mb-lg-5 mb-4">Eyewear Collection</h2>
+        
                     <div class="timeline">
+                        <!-- Timeline Entry 1 -->
                         <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes">
                             <div class="col-9 col-md-5 me-md-4 me-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class=" text-light">Get the vaccine</h3>
-
-                                <p>Donec facilisis urna dui, a dignissim mauris pretium a. Quisque quis libero fermentum, tempus felis eu, consequat nibh.</p>
+                                <h3 class="text-light">Stylish Sunglasses</h3>
+                                <img :src="require('../../public/img/sunglass.png')" alt="Stylish Sunglasses">
+                                <p>Explore our latest collection of stylish sunglasses. Perfect for both casual and formal occasions.</p>
+                                <p>Model: Classic Sun</p>
+                                <p>Price: $99.99</p>
                             </div>
-
+        
                             <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-patch-check-fill timeline-icon"></i>
+                                <i class="bi-eye timeline-icon"></i>
                             </div>
-
+        
                             <div class="col-9 col-md-5 ps-md-3 ps-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2021-07-31 Saturday</time>
+                                <time>2022-01-15 Saturday</time>
                             </div>
                         </div>
-
+        
+                        <!-- Timeline Entry 2 -->
                         <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes my-lg-5 my-4">
                             <div class="col-9 col-md-5 ms-md-4 ms-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class=" text-light">Consulting your health</h3>
-
-                                <p>You are fully permitted to use this template for your commercial or personal website. You are not permitted to redistribute the template ZIP file for a download purpose on any other <a href="https://www.google.com/search?q=free+css" target="_blank">Free CSS collection</a> website.</p>
+                                <h3 class="text-light">Fashion Frames</h3>
+                                <img :src="require('../../public/img/sunglass.png')" alt="Fashion Frames">
+                                <p>Discover our trendy fashion frames designed to elevate your style. Available in various colors and shapes.</p>
+                                <p>Model: Vogue Vision</p>
+                                <p>Price: $129.99</p>
                             </div>
-
+        
                             <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-book timeline-icon"></i>
+                                <i class="bi-image timeline-icon"></i>
                             </div>
-
+        
                             <div class="col-9 col-md-5 pe-md-3 pe-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2021-07-15 Thursday</time>
+                                <time>2022-02-05 Thursday</time>
                             </div>
                         </div>
-
-                        <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes">
-                            <div class="col-9 col-md-5 me-md-4 me-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class=" text-light">Certified Nurses</h3>
-
-                                <p>Phasellus eleifend, urna interdum congue viverra, arcu neque ultrices ligula, id pulvinar nisi nibh et lacus. Vivamus gravida, ipsum non euismod tincidunt, sapien elit fermentum mi, quis iaculis enim ligula at arcu.</p>
-                            </div>
-
-                            <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-file-medical timeline-icon"></i>
-                            </div>
-
-                            <div class="col-9 col-md-5 ps-md-3 ps-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2021-06-28 Monday</time>
-                            </div>
-                        </div>
-
-                        <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes my-lg-5 my-4">
-                            <div class="col-9 col-md-5 ms-md-4 ms-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class=" text-light">Covid-19 Hospitals</h3>
-
-                                <p class="mb-0 pb-0">Fusce vestibulum euismod nulla sed ultrices. Praesent rutrum nulla vel sapien euismod, quis tempus dui placerat.</p>
-                                
-                                <p>Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Maecenas faucibus mollis interdum. Donec ullamcorper nulla non metus auctor fringilla</p>
-                            </div>
-
-                            <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-globe timeline-icon"></i>
-                            </div>
-
-                            <div class="col-9 col-md-5 pe-md-3 pe-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2021-05-30 Sunday</time>
-                            </div>
-                        </div>
-
-                        <div class="row g-0 justify-content-end justify-content-md-around align-items-start timeline-nodes">
-                            <div class="col-9 col-md-5 me-md-4 me-lg-0 order-3 order-md-1 timeline-content bg-white shadow-lg">
-                                <h3 class=" text-light">Freelance Nursing</h3>
-
-                                <p>If you need a working contact form that submits email to your inbox, please <a rel="nofollow" href="https://templatemo.com/contact" target="_parent">visit our contact page</a> for more information.</p>
-                            </div>
-
-                            <div class="col-3 col-sm-1 order-2 timeline-icons text-md-center">
-                                <i class="bi-person timeline-icon"></i>
-                            </div>
-
-                            <div class="col-9 col-md-5 ps-md-3 ps-lg-0 order-1 order-md-3 py-4 timeline-date">
-                                <time>2021-05-18 Tuesday</time>
-                            </div>
-                        </div>
+        
+                        <!-- Timeline Entry 3 -->
+                        <!-- Add more entries as needed -->
+        
                     </div>
-
+        
                 </div>
             </div>
         </section>
+        
 
         <section class="section-padding pb-0" id="reviews">
             <div class="container">
@@ -510,3 +471,4 @@ export default {
   }
 };
 </script>
+
