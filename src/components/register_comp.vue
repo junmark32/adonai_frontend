@@ -130,7 +130,8 @@
   
   <script>
   import axios from 'axios';
-  
+  import router from '@/router';
+
   export default {
     data() {
       return {
@@ -182,6 +183,8 @@
             console.error('Registration failed');
             // Handle the case where registration failed, e.g., show an error message.
           }
+
+          router.push('/Verification');
         } catch (error) {
           console.error('Error during registration:', error);
           // Handle any errors that occurred during the registration process.

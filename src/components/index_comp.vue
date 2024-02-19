@@ -48,7 +48,12 @@
 
                 <div class="navbar-icons">
                     <a href="#" class="profile-icon"><i class="bi-person"></i></a>
-                    <a href="#" class="cart-icon"><i class="bi-cart"></i><span class="cart-count">{{ cart.length }}</span></a>
+                    <div class="cart-icon" @click="toggleCartModal">
+                        <i class="bi-cart"></i>
+                        <span class="cart-count">{{ cart.length }}</span>
+                    </div>
+                    
+                                        
                 </div>
 
             </div>
@@ -138,7 +143,7 @@
             </div>
         </section>
 
-        <section class="eyewear">
+        <section id="eyewear">
         <v-app>
             <v-container>
 
@@ -301,21 +306,36 @@
                         
                             <form role="form" @submit.prevent="submitBooking">
                                 <div class="row">
-                                    <div class="col-lg-6 col-12">
-                                        <input type="text" v-model="name" id="name" class="form-control" placeholder="Full name" required>
-                                    </div>
+                                    
+                                <div class="col-lg-6 col-12">
+                                    <input type="text" v-model="firstname" id="firstname" class="form-control" placeholder="First name" @input="validateName" required>
+                                </div>
+
+                                <div class="col-lg-6 col-12">
+                                    <input type="text" v-model="lastname" id="lastname" class="form-control" placeholder="Last name" @input="validateName" required>
+                                </div>
 
                                     <div class="col-lg-6 col-12">
                                         <input type="email" v-model="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address" required>
                                     </div>
 
-                                    <div class="col-lg-6 col-12">
-                                        <input type="telephone" v-model="phone" id="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" class="form-control" placeholder="+69 123-456-7890">
-                                    </div>
+                                <div class="col-lg-6 col-12">
+                                    <input type="tel" v-model="phone" id="phone" class="form-control" placeholder="+63 123-456-7890" maxlength="14" @input="formatPhoneNumber" required>
+                                </div>
 
-                                    <div class="col-lg-6 col-12">
-                                        <input type="date" v-model="date" id="date" value="" class="form-control">    
-                                    </div>
+                                <!-- Date picker -->
+                        <div class="col-lg-6 col-12">
+                        <input type="date" v-model="selectedDate" id="date" class="form-control" :style="{ borderBottom: isDateBooked(selectedDate) ? '2px solid red' : '' }">    
+                        </div>
+                                
+                                <!-- Available time slots -->
+                                <div class="col-lg-6 col-12">
+                                  <h3>Available Time Slots:</h3>
+                                  <ul v-if="availableTimeSlots.length > 0">
+                                    <li v-for="timeSlot in availableTimeSlots" :key="timeSlot">{{ timeSlot }}</li>
+                                  </ul>
+                                  <p v-else>No available time slots for selected date.</p>
+                                </div>
 
                                     <div class="col-lg-6 col-12">
                                         <select v-model="selectedPurpose" class="form-control" required>
@@ -323,6 +343,7 @@
                                           <option value="General Eye Check">General Eye Check</option>
                                           <option value="Cataract">Cataract</option>
                                           <option value="Laser Vision Correction">Laser Vision Correction</option>
+                                          <option value="Follow Up Checkup">Follow Up Checkup</option>
                                           <!-- Add more options as needed -->
                                         </select>
                                     </div>
@@ -430,14 +451,18 @@ export default {
         selectedPurpose: '',
         selectedDoctor: '',
         selectedLocation: '',
-        name: '',
+        firstname: '',
+        lastname: '',
         email: '',
         phone: '',
         date: '',
         message: '',
         //
         PatientID: null,
-        
+        //
+        selectedDate: '', // Selected date by the user
+      bookedDates: [], // Array to hold already booked dates
+      availableTimeSlots: [], // Array to hold available time slots
         //
         drawer: false,
       products: [
@@ -464,13 +489,21 @@ export default {
 
   created(){
     this.PatientID = sessionStorage.getItem('PatientID');
+    this.fetchBookedDates();
+  },
+
+  watch: {
+    selectedDate: function(newDate) {
+      this.updateAvailableTimeSlots(newDate);
+    }
   },
 
   methods: {
     async submitBooking() {
         try {
           const response = await axios.post(`patient/insertBooking/${this.PatientID}`, {
-            fullname: this.name,
+            firstname: this.firstname,
+            lastname: this.lastname,
             email: this.email,
             phone: this.phone,
             pref_date: this.date,
@@ -517,7 +550,56 @@ export default {
       },
       formatPrice(price) {
         return '$' + price.toFixed(2);
+      },
+
+      //
+
+      formatPhoneNumber() {
+        // Remove any non-digit characters from the input
+        let cleaned = this.phone.replace(/\D/g, '');
+        
+        // Check if the input length is 11 digits
+        if (cleaned.length === 11) {
+            // Replace the leading '0' with '+63' and format the number
+            cleaned = '+63 ' + cleaned.substring(1, 4) + '-' + cleaned.substring(4, 7) + '-' + cleaned.substring(7);
+        }
+
+        // Update the phone number value with the formatted number
+        this.phone = cleaned;
+    },
+
+    validateName() {
+        // Remove any non-letter characters from the input
+        this.firstname = this.firstname.replace(/[^a-zA-Z]/g, '');
+        this.lastname = this.lastname.replace(/[^a-zA-Z]/g, '');
+    },
+    
+    //
+    async fetchBookedDates() {
+        try {
+          const response = await axios.get('booked-dates');
+          this.bookedDates = response.data;
+        } catch (error) {
+          console.error('Error fetching booked dates:', error);
+        }
+      },
+
+      //
+      // Method to check if a date is booked
+    isDateBooked(date) {
+      return this.bookedDates.includes(date);
+    },
+
+      // Method to fetch available time slots from backend
+      async updateAvailableTimeSlots(selectedDate) {
+        try {
+          const response = await axios.get('available-time-slots', { params: { date: selectedDate } });
+          this.availableTimeSlots = response.data;
+        } catch (error) {
+          console.error('Error fetching available time slots:', error);
+        }
       }
+
 
   }
 };
@@ -572,4 +654,4 @@ export default {
 }
 
 
-</style>
+</style>        

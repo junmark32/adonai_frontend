@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import index from '../views/index.vue'
 import Register from '../views/RegisterView.vue'
 import Login from '../views/LoginView.vue'
+import Verification from '../views/VerificationView.vue'
 
 //doctor
 import Doctor_Dashboard from '../views/doctor/DashboardView.vue'
@@ -22,6 +23,12 @@ const routes = [
     path: '/Register',
     name: 'register',
     component: Register
+  },
+
+  {
+    path: '/Verification',
+    name: 'verification',
+    component: Verification
   },
 
   {
